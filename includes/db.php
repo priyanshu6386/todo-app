@@ -1,5 +1,6 @@
 <?php
 $dbFile = __DIR__ . '/../tasks.db';
+require_once __DIR__ . '/config.php';
 
 try {
     $pdo = new PDO("sqlite:$dbFile");

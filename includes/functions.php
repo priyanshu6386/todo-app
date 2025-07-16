@@ -1,12 +1,19 @@
 <?php
-// Very small helper to redirect & quit
-function redirect(string $to = BASE_URL): void
+
+// If BASE_URL not defined yet, define default
+if (!defined('BASE_URL')) {
+    define('BASE_URL', '/');
+}
+
+// Redirect helper
+function redirect(string $to = null): void
 {
-    header('Location: '.$to);
+    if ($to === null) $to = BASE_URL . 'index.php';
+    header('Location: ' . $to);
     exit;
 }
 
-// Basic XSS‑safe output
+// XSS-safe output helper
 function h(string $str): string
 {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
