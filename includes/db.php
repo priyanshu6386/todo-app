@@ -1,16 +1,19 @@
 <?php
-require_once __DIR__.'/config.php';
+$dbFile = __DIR__ . '/../tasks.db';
 
 try {
-    $pdo = new PDO(
-        'mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8mb4',
-        DB_USER,
-        DB_PASS,
-        [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]
-    );
-} catch (PDOException $e) {
-    exit('Database connection failed: '.$e->getMessage());
+    $pdo = new PDO("sqlite:$dbFile");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Table check + create if not exists
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            is_done INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ");
+} catch (Exception $e) {
+    die("DB error: " . $e->getMessage());
 }
